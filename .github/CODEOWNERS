@@ -1,0 +1,6 @@
+# Replace the placeholder handles with real GitHub usernames.
+*                        @hridayadande
+/pipeline/segmentation/  @<amr> @<himanshu>
+/pipeline/geometry/      @<divyanshu>
+/pipeline/evaluation/    @<ayush>
+/.github/                @hridayadande

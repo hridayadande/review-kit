@@ -1,0 +1,26 @@
+name: Review summary
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/comments" > comments.json
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/reviews" > reviews.json
+          python reviewkit.py comments.json reviews.json --pr "$PR" > summary.md
+          gh pr comment "$PR" --body-file summary.md

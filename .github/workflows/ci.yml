@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    name: Format, lint, test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          # full history so reviewkit size can diff against base
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dev tools
+        run: pip install "ruff==0.17.1" pytest
+
+      - name: Check formatting
+        run: ruff format --check .
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Test
+        run: pytest -q
+
+      # size is a nudge, not a gate, so this never fails the build
+      - name: Report PR size
+        if: github.event_name == 'pull_request'
+        run: |
+          python -m reviewkit size --base "origin/${{ github.base_ref }}" >> "$GITHUB_STEP_SUMMARY" \
+            || echo "Could not compute PR size; see the job log." >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,50 @@
+name: Review summary
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+      MARKER: "<!-- reviewkit-summary -->"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Fetch review comments and reviews
+        # --paginate gives one array per page, jq -s merges them into one
+        run: |
+          gh api --paginate "repos/$REPO/pulls/$PR/comments" --jq '.[]' | jq -s '.' > comments.json
+          gh api --paginate "repos/$REPO/pulls/$PR/reviews"  --jq '.[]' | jq -s '.' > reviews.json
+
+      - name: Build the summary
+        run: |
+          python -m reviewkit summary --comments comments.json --reviews reviews.json --pr "$PR" \
+            > summary.md
+
+      - name: Post or update the summary comment
+        # edit the old comment if there is one so the PR does not fill up
+        run: |
+          existing_id=$(gh api --paginate "repos/$REPO/issues/$PR/comments" \
+            --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -n 1)
+
+          if [ -n "$existing_id" ]; then
+            # -F reads @summary.md from the file
+            gh api -X PATCH "repos/$REPO/issues/comments/$existing_id" -F body=@summary.md
+          else
+            gh pr comment "$PR" --repo "$REPO" --body-file summary.md
+          fi

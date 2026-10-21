@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "review-kit"
+version = "0.1.0"
+description = "Code review process toolkit for the Qualcomm Digital Twin capstone team."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Hridaya Dande" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff==0.17.1"]
+
+[project.scripts]
+reviewkit = "reviewkit.cli:main"
+
+[tool.setuptools]
+packages = ["reviewkit"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

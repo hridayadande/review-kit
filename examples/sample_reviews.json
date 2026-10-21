@@ -1,0 +1,18 @@
+[
+  {
+    "id": 2001,
+    "user": { "login": "divyanshu" },
+    "state": "COMMENTED",
+    "body": "Geometry looks right to me. A couple of questions and one naming nit inline.",
+    "submitted_at": "2026-10-20T19:05:00Z",
+    "html_url": "https://github.com/hridayadande/review-kit/pull/1#pullrequestreview-2001"
+  },
+  {
+    "id": 2002,
+    "user": { "login": "hridayadande" },
+    "state": "CHANGES_REQUESTED",
+    "body": "One blocker: the hard-coded dataset path. Everything else inline is non-blocking.",
+    "submitted_at": "2026-10-20T19:15:00Z",
+    "html_url": "https://github.com/hridayadande/review-kit/pull/1#pullrequestreview-2002"
+  }
+]

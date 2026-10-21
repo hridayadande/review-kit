@@ -1,0 +1,32 @@
+[
+  {
+    "user": {"login": "hridayadande"},
+    "path": "pipeline/geometry/window_split.py",
+    "line": 12,
+    "body": "blocker: SUM_TILE_PATH is hard-coded. Pass the tile path in so this also runs on the Helsinki LiDAR data."
+  },
+  {
+    "user": {"login": "hridayadande"},
+    "path": "pipeline/geometry/window_split.py",
+    "line": 41,
+    "body": "question: why is the merge threshold 0.15? Is that from the paper or tuned on one tile?"
+  },
+  {
+    "user": {"login": "divyanshu"},
+    "path": "pipeline/geometry/window_split.py",
+    "line": 58,
+    "body": "nit: `faces_out` could just be `faces`."
+  },
+  {
+    "user": {"login": "divyanshu"},
+    "path": "pipeline/geometry/window_split.py",
+    "line": 72,
+    "body": "Does this handle a tile with zero faces? I think it would divide by zero."
+  },
+  {
+    "user": {"login": "divyanshu"},
+    "path": "pipeline/geometry/test_window_split.py",
+    "line": 9,
+    "body": "praise: the two-window fixture makes the expected output obvious. Nice."
+  }
+]
